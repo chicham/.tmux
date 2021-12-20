@@ -19,7 +19,7 @@
 # new window retains current path, possible values are:
 #   - true
 #   - false (default)
-tmux_conf_new_window_retain_current_path=true
+tmux_conf_new_window_retain_current_path=false
 
 # new pane retains current path, possible values are:
 #   - true (default)
@@ -34,7 +34,7 @@ tmux_conf_new_pane_retain_current_path=true
 # prompt for session name when creating a new session, possible values are:
 #   - true
 #   - false (default)
-tmux_conf_new_session_prompt=false
+tmux_conf_new_session_prompt=true
 
 
 # -- display -------------------------------------------------------------------
@@ -220,7 +220,7 @@ tmux_conf_theme_right_separator_sub=''
 #     - #{root}
 #     - #{uptime_d}
 #     - #{uptime_h}
-     - #{uptime_m}
+#      - #{uptime_m}
 #     - #{uptime_s}
 #     - #{username}
 #     - #{username_ssh}
