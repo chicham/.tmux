@@ -19,7 +19,7 @@
 # new window retains current path, possible values are:
 #   - true
 #   - false (default)
-tmux_conf_new_window_retain_current_path=true
+tmux_conf_new_window_retain_current_path=false
 
 # new pane retains current path, possible values are:
 #   - true (default)
@@ -29,12 +29,12 @@ tmux_conf_new_pane_retain_current_path=true
 # new pane tries to reconnect ssh sessions (experimental), possible values are:
 #   - true
 #   - false (default)
-tmux_conf_new_pane_reconnect_ssh=true
+# tmux_conf_new_pane_reconnect_ssh=true
 
 # prompt for session name when creating a new session, possible values are:
 #   - true
 #   - false (default)
-tmux_conf_new_session_prompt=false
+tmux_conf_new_session_prompt=true
 
 
 # -- display -------------------------------------------------------------------
@@ -42,7 +42,7 @@ tmux_conf_new_session_prompt=false
 # RGB 24-bit colour support (tmux >= 2.2), possible values are:
 #  - true
 #  - false (default)
-tmux_conf_24b_colour=false
+tmux_conf_24b_colour=true
 
 # default theme
 tmux_conf_theme_colour_1="#080808"    # dark gray
@@ -189,18 +189,15 @@ tmux_conf_theme_window_status_last_bg="$tmux_conf_theme_colour_2"
 tmux_conf_theme_window_status_last_attr="none"
 
 # status left/right sections separators
-# tmux_conf_theme_left_separator_main=""
-# tmux_conf_theme_left_separator_sub="|"
-# tmux_conf_theme_right_separator_main=""
-# tmux_conf_theme_right_separator_sub="|"
-# tmux_conf_theme_left_separator_main="\uE0B0"  # /!\ you don't need to install Powerline
-tmux_conf_theme_left_separator_main=""  # /!\ you don't need to install Powerline
-# tmux_conf_theme_left_separator_sub="\uE0B1"   #   you only need fonts patched with
-tmux_conf_theme_left_separator_sub=""   #   you only need fonts patched with
-# tmux_conf_theme_right_separator_main="\uE0B2" #   Powerline symbols or the standalone
-tmux_conf_theme_right_separator_main="" #   Powerline symbols or the standalone
-# tmux_conf_theme_right_separator_sub="\uE0B3"  #   PowerlineSymbols.otf font, see README.md
-tmux_conf_theme_right_separator_sub=""  #   PowerlineSymbols.otf font, see README.md
+tmux_conf_theme_left_separator_main=''
+tmux_conf_theme_left_separator_sub=''
+tmux_conf_theme_right_separator_main=''
+tmux_conf_theme_right_separator_sub=''
+
+#tmux_conf_theme_left_separator_main=''  # /!\ you don't need to install Powerline
+#tmux_conf_theme_left_separator_sub=''   #   you only need fonts patched with
+#tmux_conf_theme_right_separator_main='' #   Powerline symbols or the standalone
+#tmux_conf_theme_right_separator_sub=''  #   PowerlineSymbols.otf font
 
 # status left/right content:
 #   - separate main sections with "|"
@@ -221,11 +218,9 @@ tmux_conf_theme_right_separator_sub=""  #   PowerlineSymbols.otf font, see RE
 #     - #{pairing}
 #     - #{prefix}
 #     - #{root}
-#     - #{synchronized}
-#     - #{uptime_y}
-#     - #{uptime_d} (modulo 365 when #{uptime_y} is used)
+#     - #{uptime_d}
 #     - #{uptime_h}
-#     - #{uptime_m}
+#      - #{uptime_m}
 #     - #{uptime_s}
 #     - #{username}
 #     - #{username_ssh}
@@ -251,7 +246,7 @@ tmux_conf_theme_pairing_bg="none"
 tmux_conf_theme_pairing_attr="none"
 
 # prefix indicator
-# tmux_conf_theme_prefix="⌨"                  # U+2328
+# tmux_conf_theme_prefix="侀"                  # U+2328
 tmux_conf_theme_prefix="🔖"                  # U+2328
 tmux_conf_theme_prefix_bg="none"
 tmux_conf_theme_prefix_attr="none"
@@ -263,7 +258,7 @@ tmux_conf_theme_mouse_bg="none"
 tmux_conf_theme_mouse_attr="none"
 
 # root indicator
-# tmux_conf_theme_root=""
+# tmux_conf_theme_root=""
 tmux_conf_theme_root="🤞"
 tmux_conf_theme_root_fg="none"
 tmux_conf_theme_root_bg="none"
@@ -378,6 +373,31 @@ set -g bell-action none
 # move status line to top
 #set -g status-position top
 
+unbind C-c
+
+unbind -
+bind | split-window -h
+unbind _
+bind _ split-window -v
+
+bind -r Left select-pane -L  # move left
+bind -r Down select-pane -D  # move down
+bind -r Up select-pane -U  # move up
+bind -r right select-pane -R  # move right
+
+bind -r M-Left resize-pane -L 2
+bind -r M-Down resize-pane -D 2
+bind -r M-Up resize-pane -U 2
+bind -r M-Right resize-pane -R 2
+
+unbind Tab
+unbind S-Tab
+bind -r S-Tab previous-window # select previous window
+bind -r Tab next-window     # select next window
+
+
+set -g bell-action none
+
 # -- tpm -----------------------------------------------------------------------
 
 # while I don't use tpm myself, many people requested official support so here
@@ -396,6 +416,17 @@ tmux_conf_update_plugins_on_launch=true
 #   - true (default)
 #   - false
 tmux_conf_update_plugins_on_reload=true
+
+# by default, reloading the configuration will uninstall tpm and plugins when no
+# plugins are enabled
+#   - true (default)
+#   - false
+tmux_conf_uninstall_plugins_on_reload=true
+
+# /!\ the tpm bindings differ slightly from upstream:
+#   - installing plugins: <prefix> + I
+#   - uninstalling plugins: <prefix> + Alt + u
+#   - updating plugins: <prefix> + u
 
 # /!\ do not add set -g @plugin 'tmux-plugins/tpm'
 # /!\ do not add run '~/.tmux/plugins/tpm/tpm'
@@ -421,6 +452,8 @@ tmux_conf_update_plugins_on_reload=true
 
 # # /!\ do not remove the following line
 # EOF
+#
+# # /!\ do not "uncomment" the functions: the leading "# " characters are needed
 #
 # weather() {
 #   curl -m 1 wttr.in?format=3 2>/dev/null
